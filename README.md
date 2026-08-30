@@ -15,7 +15,7 @@ downloaded without a GitHub account. The client has neither.
 ## The client's link
 
 ```
-https://<your-github-username>.github.io/coldchain-download/
+https://crusheddy.github.io/coldchain-download/
 ```
 
 Send this once. It keeps working for every future release — the page reads the
