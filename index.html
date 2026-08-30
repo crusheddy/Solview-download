@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ColdChain — Download</title>
+<style>
+  :root {
+    --bg: #0B1020;
+    --surface: #151B2E;
+    --border: #2A3352;
+    --text: #F2F5FF;
+    --muted: #94A0C0;
+    --faint: #6B7799;
+    --accent: #38BDF8;
+    --ok: #34D399;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 32px 20px 64px;
+  }
+  .wrap { width: 100%; max-width: 520px; }
+  header { text-align: center; margin-bottom: 32px; }
+  .mark {
+    width: 64px; height: 64px; margin: 0 auto 16px;
+    border-radius: 18px;
+    background: linear-gradient(140deg, var(--accent), #A78BFA);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mark svg { width: 34px; height: 34px; }
+  h1 { font-size: 28px; margin: 0 0 8px; letter-spacing: -0.4px; }
+  .tagline { color: var(--muted); margin: 0; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .label {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.6px;
+    text-transform: uppercase; color: var(--faint);
+  }
+  .btn {
+    display: block; width: 100%; margin-top: 16px;
+    padding: 16px 20px; border-radius: 12px;
+    background: var(--accent); color: #06121C;
+    font-size: 16px; font-weight: 700; text-align: center;
+    text-decoration: none; border: none; cursor: pointer;
+  }
+  .btn.secondary {
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border); font-weight: 600;
+  }
+  .meta { color: var(--faint); font-size: 13px; margin-top: 12px; text-align: center; }
+  ol { margin: 12px 0 0; padding-left: 20px; color: var(--muted); }
+  ol li { margin-bottom: 10px; }
+  .note {
+    border-left: 3px solid var(--accent);
+    padding: 2px 0 2px 14px;
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 16px;
+  }
+  footer { text-align: center; color: var(--faint); font-size: 13px; margin-top: 32px; }
+  code {
+    background: var(--bg); padding: 2px 6px; border-radius: 5px;
+    font-size: 13px; color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#06121C" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M10 13.6V5a2 2 0 1 1 4 0v8.6a4 4 0 1 1-4 0Z" />
+      </svg>
+    </div>
+    <h1>ColdChain</h1>
+    <p class="tagline">Freezer temperature, doors, power and stock — on your phone.</p>
+  </header>
+
+  <div class="card">
+    <div class="label">Android</div>
+    <a class="btn" id="download" href="#">Download the app</a>
+    <p class="meta" id="release-meta">Checking for the latest version…</p>
+  </div>
+
+  <div class="card">
+    <div class="label">Installing</div>
+    <ol>
+      <li>Tap <strong>Download the app</strong> above and save the <code>.apk</code> file.</li>
+      <li>Open it from your notifications or your Downloads folder.</li>
+      <li>Android will ask permission to install from this source — allow it, then tap
+          <strong>Install</strong>.</li>
+      <li>Open ColdChain and sign in with the details you were sent.</li>
+    </ol>
+    <p class="note">
+      This app is distributed directly rather than through the Play Store, so that
+      warning is expected. Only install the file from this page.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="label">iPhone</div>
+    <p style="color: var(--muted); margin: 12px 0 0;">
+      An iOS build is available on request — it is distributed through TestFlight
+      rather than a direct download. Get in touch and we will send an invite.
+    </p>
+    <a class="btn secondary" id="all-releases" href="#">All versions</a>
+  </div>
+
+  <footer>Having trouble installing? Reply to the message that sent you this link.</footer>
+</div>
+
+<script>
+/* Works out which GitHub repo is hosting this page, so the links below stay
+   correct without anyone editing this file. On <user>.github.io/<repo>/ that
+   is the hostname and the first path segment. */
+(function () {
+  var host = location.hostname;
+  var owner = host.endsWith('.github.io') ? host.split('.')[0] : null;
+  var repo = (location.pathname.split('/').filter(Boolean)[0]) || null;
+
+  var releasesUrl = owner && repo
+    ? 'https://github.com/' + owner + '/' + repo + '/releases'
+    : null;
+
+  var download = document.getElementById('download');
+  var allReleases = document.getElementById('all-releases');
+  var meta = document.getElementById('release-meta');
+
+  if (!releasesUrl) {
+    meta.textContent = 'Open this page from its published link to get the download.';
+    download.removeAttribute('href');
+    download.style.opacity = '0.5';
+    return;
+  }
+
+  download.href = releasesUrl + '/latest';
+  allReleases.href = releasesUrl;
+
+  /* Link straight at the .apk when we can, so the client gets the file in one
+     tap instead of landing on a GitHub release page. */
+  fetch('https://api.github.com/repos/' + owner + '/' + repo + '/releases/latest', {
+    headers: { Accept: 'application/vnd.github+json' }
+  })
+    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function (rel) {
+      var apk = (rel.assets || []).filter(function (a) {
+        return /\.apk$/i.test(a.name);
+      })[0];
+
+      if (apk) {
+        download.href = apk.browser_download_url;
+        var mb = (apk.size / 1048576).toFixed(1);
+        meta.textContent = 'Version ' + (rel.tag_name || '') + ' · ' + mb + ' MB';
+      } else {
+        meta.textContent = 'Version ' + (rel.tag_name || '') + ' — open the release to download.';
+      }
+    })
+    .catch(function () {
+      meta.textContent = 'Opens the latest release on GitHub.';
+    });
+})();
+</script>
+</body>
+</html>
